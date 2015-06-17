@@ -1,8 +1,32 @@
---- ------------------------------------------------------------------------------------------------------------------------
---- Código XAML
---- ------------------------------------------------------------------------------------------------------------------------
+<phone:PhoneApplicationPage
+    x:Class="Mapa"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="True">
 
-<!--ContentPanel - place additional content here-->
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel contains the name of the application and page title-->
+        <StackPanel Grid.Row="0" Margin="12,17,0,28">
+            <TextBlock Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+        </StackPanel>
+
+        <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="5">
             <Viewbox Margin="10">
                 <Grid xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Name="gridMapa">
@@ -36,100 +60,6 @@
                 </Grid>
             </Viewbox>
         </Grid>
+    </Grid>
 
---- ------------------------------------------------------------------------------------------------------------------------
---- Código CS
---- ------------------------------------------------------------------------------------------------------------------------
-/// <summary>
-/// Altera a cor do elemento selecionado.
-/// </summary>
-/// <param name="sender"></param>
-/// <param name="e"></param>
-private void OnPathTap(object sender, System.Windows.Input.GestureEventArgs e)
-{
-    // Cor padrão dos elementos do mapa
-    Color cor = ConvertStringToColor("#007acc");
-
-    // Recupera todos os elementos "Path" do mapa
-    var listaPaths = FindControls<Path>(gridMapa);
-    
-    // Altera a cor de todos os elementos novamente para a cor padrão
-    if (listaPaths != null)
-    {
-        foreach (Path item in listaPaths)
-        {
-            item.Fill = new SolidColorBrush(cor);
-        }
-    }
-
-    // Recupera o elemento Path selecionado
-    Path path = (Path)sender;
-    if (path != null)
-    {
-        // Altera a cor do elemento
-        path.Fill = new SolidColorBrush(Colors.Blue);
-    }
-}
-
-/// <summary>
-/// Busca uma lista de controles dentro de outro controle.
-/// </summary>
-/// <typeparam name="T">Tipo a ser buscado.</typeparam>
-/// <param name="parentElement">Controle pai.</param>
-/// <returns>Controle.</returns>
-public List<T> FindControls<T>(DependencyObject targetElement) where T : DependencyObject
-{
-    var result = new List<T>();
-
-    var count = VisualTreeHelper.GetChildrenCount(targetElement);
-    if (count == 0)
-        return new List<T>();
-
-    for (int i = 0; i < count; i++)
-    {
-        var child = VisualTreeHelper.GetChild(targetElement, i);
-        if (child is T)
-        {
-            result.Add(child as T);
-        }
-        else
-        {
-            result = FindControls<T>(child);
-        }
-    }
-
-    return result;
-}
-
-/// <summary>
-/// Conmverte uma cor em Hexadecimal para System.Windows.Media.Color.
-/// Referência: http://stackoverflow.com/a/11739523/1509954
-/// </summary>
-/// <param name="hex"></param>
-/// <returns></returns>
-public Color ConvertStringToColor(String hex)
-{
-    //remove the # at the front
-    hex = hex.Replace("#", "");
-
-    byte a = 255;
-    byte r = 255;
-    byte g = 255;
-    byte b = 255;
-
-    int start = 0;
-
-    //handle ARGB strings (8 characters long)
-    if (hex.Length == 8)
-    {
-        a = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-        start = 2;
-    }
-
-    //convert RGB characters to bytes
-    r = byte.Parse(hex.Substring(start, 2), System.Globalization.NumberStyles.HexNumber);
-    g = byte.Parse(hex.Substring(start + 2, 2), System.Globalization.NumberStyles.HexNumber);
-    b = byte.Parse(hex.Substring(start + 4, 2), System.Globalization.NumberStyles.HexNumber);
-
-    return Color.FromArgb(a, r, g, b);
-}
+</phone:PhoneApplicationPage>
